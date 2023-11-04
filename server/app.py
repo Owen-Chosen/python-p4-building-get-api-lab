@@ -20,19 +20,33 @@ def index():
 
 @app.route('/bakeries')
 def bakeries():
-    return ''
+    all_bakeries = []
+    for bakery in Bakery.query.all():
+        all_bakeries.append(bakery.to_dict())
+
+    response = make_response(jsonify(all_bakeries), 200)
+    return response
 
 @app.route('/bakeries/<int:id>')
 def bakery_by_id(id):
-    return ''
+    current_bakery = Bakery.query.filter(Bakery.id==id).first()
+    response = make_response(jsonify(current_bakery.to_dict()))
+    return response
 
 @app.route('/baked_goods/by_price')
 def baked_goods_by_price():
-    return ''
+    all_bakeries_by_price = []
+    for bake in BakedGood.query.order_by((BakedGood.price).desc()).all():
+        all_bakeries_by_price.append(bake.to_dict())
+    response = make_response(jsonify(all_bakeries_by_price))
+    return response
 
 @app.route('/baked_goods/most_expensive')
 def most_expensive_baked_good():
-    return ''
+    most_expensive_baked_good = BakedGood.query.order_by((BakedGood.price).desc()).first()
+        
+    response = make_response(jsonify(most_expensive_baked_good.to_dict()))
+    return response
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
